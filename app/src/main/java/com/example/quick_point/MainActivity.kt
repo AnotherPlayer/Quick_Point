@@ -28,32 +28,33 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.quick_point.ui.theme.Quick_pointTheme
+import com.example.quick_point.ui.theme.Quick_PointTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Quick_pointTheme {
-                // Crea un controlador de navegación.
-                val navController = rememberNavController()
+            // El `NavHost` y el `navController` ahora están dentro de un Composable.
+            AppNavigation()
+        }
+    }
+}
 
-                // Define el host de navegación.
-                NavHost(navController = navController, startDestination = "main_screen") {
-                    // Pantalla principal
-                    composable("main_screen") {
-                        MainScreen(navController = navController)
-                    }
-                    // Pantalla "Pagar"
-                    composable("pay_screen") {
-                        PayScreen()
-                    }
-                    // Pantalla "Cobrar"
-                    composable("collect_screen") {
-                        CollectScreen()
-                    }
-                }
+@Composable
+fun AppNavigation() {
+    Quick_PointTheme {
+        val navController = rememberNavController()
+
+        NavHost(navController = navController, startDestination = "main_screen") {
+            composable("main_screen") {
+                MainScreen(navController = navController)
+            }
+            composable("pay_screen") {
+                PayScreen()
+            }
+            composable("collect_screen") {
+                CollectScreen()
             }
         }
     }
@@ -137,7 +138,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
-    Quick_pointTheme {
+    Quick_PointTheme {
         // La vista previa no necesita el controlador de navegación,
         // por lo que no lo pasamos.
         Greeting("Android")
