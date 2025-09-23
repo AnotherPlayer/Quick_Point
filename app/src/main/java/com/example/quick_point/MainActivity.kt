@@ -24,31 +24,47 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextAlign
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.quick_point.ui.theme.Quick_pointTheme
 
-// La clase principal de la actividad.
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             Quick_pointTheme {
-                // Llama a la pantalla principal de la aplicación.
-                MainScreen()
+                // Crea un controlador de navegación.
+                val navController = rememberNavController()
+
+                // Define el host de navegación.
+                NavHost(navController = navController, startDestination = "main_screen") {
+                    // Pantalla principal
+                    composable("main_screen") {
+                        MainScreen(navController = navController)
+                    }
+                    // Pantalla "Pagar"
+                    composable("pay_screen") {
+                        PayScreen()
+                    }
+                    // Pantalla "Cobrar"
+                    composable("collect_screen") {
+                        CollectScreen()
+                    }
+                }
             }
         }
     }
 }
 
 /**
- * El composable principal que construye la interfaz de usuario de la pantalla.
- * Representa toda la pantalla del teléfono visible en la imagen.
+ * El composable principal de la pantalla, ahora recibe el controlador de navegación.
  */
 @Composable
-fun MainScreen() {
+fun MainScreen(navController: NavHostController) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        // Un Column es un contenedor que organiza a sus hijos verticalmente.
-        // Aquí lo usamos para organizar el saludo en la parte superior y los botones en la inferior.
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -56,43 +72,43 @@ fun MainScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Sección de Saludo: Este composable muestra el texto "¡Hola David!".
-            // Ocupa el espacio restante en el medio de la pantalla.
+            // Sección de Saludo
             Greeting(name = "David", modifier = Modifier.weight(1f))
 
-            // Sección de Botones: Este Row es un contenedor que organiza a sus hijos horizontalmente.
-            // Se coloca en la parte inferior de la pantalla.
+            // Sección de Botones
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp), // Agrega un relleno alrededor de los botones.
+                    .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                // Botón "Pagar": Visualmente se encuentra en la parte inferior izquierda de la pantalla.
+                // Botón "Pagar"
                 Button(
-                    onClick = { /* TODO: Agrega la funcionalidad para 'Pagar' aquí */ },
+                    onClick = {
+                        // Código de navegación para el botón "Pagar"
+                        navController.navigate("pay_screen")
+                    },
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 4.dp)
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        // Icono de flecha hacia arriba.
                         Icon(painter = painterResource(id = android.R.drawable.arrow_up_float), contentDescription = "Pagar")
-                        // Texto "Pagar" debajo del icono.
                         Text(text = "Pagar", textAlign = TextAlign.Center)
                     }
                 }
-                // Botón "Cobrar": Visualmente se encuentra en la parte inferior derecha de la pantalla.
+                // Botón "Cobrar"
                 Button(
-                    onClick = { /* TODO: Agrega la funcionalidad para 'Cobrar' aquí */ },
+                    onClick = {
+                        // Código de navegación para el botón "Cobrar"
+                        navController.navigate("collect_screen")
+                    },
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 4.dp)
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        // Icono de flecha hacia abajo.
                         Icon(painter = painterResource(id = android.R.drawable.arrow_down_float), contentDescription = "Cobrar")
-                        // Texto "Cobrar" debajo del icono.
                         Text(text = "Cobrar", textAlign = TextAlign.Center)
                     }
                 }
@@ -101,10 +117,6 @@ fun MainScreen() {
     }
 }
 
-/**
- * Este composable muestra el mensaje de saludo "¡Hola David!".
- * Se ve como el texto azul y grande en el centro de la pantalla.
- */
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Column(
@@ -117,19 +129,17 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
             text = "¡Hola $name!",
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF1E88E5) // El color azul del texto en la imagen.
+            color = Color(0xFF1E88E5)
         )
     }
 }
 
-/**
- * Este composable es una vista previa de la pantalla completa en Android Studio.
- * No es parte de la aplicación, solo te permite ver cómo se verá el diseño.
- */
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
     Quick_pointTheme {
-        MainScreen()
+        // La vista previa no necesita el controlador de navegación,
+        // por lo que no lo pasamos.
+        Greeting("Android")
     }
 }

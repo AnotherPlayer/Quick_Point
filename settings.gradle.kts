@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Quick_point"
+rootProject.name = "Quick_Point"
 include(":app")
